@@ -99,9 +99,35 @@ const updateProduct = async (req, res, id) => {
   }
 };
 
+/**
+ * @function deleteProduct
+ * @description Delete product from using remove() from Product Model
+ * @param {http.ClientRequest} req - HTTP Request
+ * @param {http.ServerResponse} res - HTTP Response
+ * @param {integer} id - the product ID
+ * @returns {http.ServerResponse} http response with product if exists or a message if not found in JSON format
+ */
+ const deleteProduct = async (req, res, id) => {
+  try {
+    const product = await Product.findById(id);
+    
+    if (!product) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ message: 'Product not found' }));
+    } else {
+      await Product.remove(id);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ message: 'The product has been removed'}));
+    }
+  } catch (error) {
+    console.log('ERROR GET PRODUCTS >>> ', error);
+  }
+};
+
 module.exports = {
   getProducts,
   getProduct,
   createProduct,
   updateProduct,
+  deleteProduct,
 };
