@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const { getRequestBody } = require('../utils');
 
 /**
  * @function getProducts
@@ -51,18 +52,13 @@ const getProduct = async (req, res, id) => {
  */
 const createProduct = async (req, res) => {
   try {
-    let body = '';
+    const body = await getRequestBody(req);
+    const { title, description, price } = JSON.parse(body);
+    const product = { title, description, price };
+    const newProduct = await Product.create(product);
 
-    req.on('data', (chunk) => body += chunk.toString());
-
-    req.on('end', async () => {
-      const { title, description, price } = JSON.parse(body);
-      const product = { title, description, price };
-      const newProduct = await Product.create(product);
-
-      res.writeHead(201, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify(newProduct));
-    });
+    res.writeHead(201, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify(newProduct));
   } catch (error) {
     console.log('ERROR GET PRODUCTS >>> ', error);
   }
