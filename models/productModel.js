@@ -57,9 +57,24 @@ const update = (id, product) => {
   });
 };
 
+/**
+ * @function remove
+ * @description query to remove product by ID
+ * @param {number} id - the product ID
+ * @returns {Promise} Promise
+ */
+ const remove = (id) => {
+  return new Promise((resolve, reject) => {
+    const newProducts = products.filter((product) => product.id !== id);
+    writeDataToFile('/data/products.json', newProducts);
+    resolve();
+  });
+};
+
 module.exports = {
   findAll,
   findById,
   create,
   update,
+  remove,
 };
