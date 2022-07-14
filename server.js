@@ -2,7 +2,8 @@ const http = require('http');
 
 const {
   getProducts,
-  getProduct
+  getProduct,
+  createProduct,
 } = require('./controllers/productController');
 
 const server = http.createServer((request, response) => {
@@ -13,6 +14,8 @@ const server = http.createServer((request, response) => {
   } else if (url.match(/\/api\/products\/[\w]+/) && method === 'GET') {
     const id = url.split('/')[3];
     getProduct(request, response, id);
+  } else if (url === '/api/products' && method === 'POST') {
+    createProduct(request, response);
   } else {
     response.writeHead(404, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify({ message: 'Route not found' }));
